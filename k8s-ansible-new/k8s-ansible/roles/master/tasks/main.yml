@@ -1,0 +1,26 @@
+- name: Initialize Kubernetes master
+  command: kubeadm init --pod-network-cidr=192.168.0.0/16
+  args:
+    creates: /etc/kubernetes/admin.conf
+
+- name: Setup kubeconfig for root (for Ansible automation)
+  shell: |
+    mkdir -p /root/.kube
+    cp /etc/kubernetes/admin.conf /root/.kube/config
+
+- name: Setup kubeconfig for govadmin (human user)
+  shell: |
+    mkdir -p /home/govadmin/.kube
+    cp /etc/kubernetes/admin.conf /home/govadmin/.kube/config
+    chown -R govadmin:govadmin /home/govadmin/.kube
+
+- name: Wait for Kubernetes API server to be ready
+  shell: kubectl get nodes
+  register: api_status
+  retries: 15
+  delay: 10
+  until: api_status.rc == 0
+
+- name: Install Calico CNI
+  command: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
+

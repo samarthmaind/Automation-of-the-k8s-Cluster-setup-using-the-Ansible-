@@ -1,0 +1,15 @@
+- name: Get join command from master
+  command: kubeadm token create --print-join-command
+  register: join_cmd
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once: true
+
+- name: Join worker to cluster
+  command: "{{ join_cmd.stdout }}"
+  args:
+    creates: /etc/kubernetes/kubelet.conf
+  retries: 5
+  delay: 10
+  register: join_result
+  until: join_result.rc == 0
+
