@@ -1,0 +1,14 @@
+- hosts: k8s_cluster
+  roles:
+    - common
+    - containerd
+    - kubernetes
+
+- hosts: masters
+  roles:
+    - master
+
+- hosts: workers
+  roles:
+    - worker
+
