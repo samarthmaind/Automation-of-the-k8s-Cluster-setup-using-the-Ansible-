@@ -13,24 +13,6 @@ Kubernetes cluster installer using Ansible and kubeadm.
 - Master + worker automation
 - Re-runnable and safe
 
-Ansible Control Node
-        |
-        | SSH
-        |
-+---------------------+
-| Kubernetes Master   |
-| - container runtime |
-| - kubeadm init      |
-| - CNI installed     |
-+---------------------+
-        |
-        | kubeadm join
-        |
-+---------------------+
-| Kubernetes Worker   |
-| - container runtime |
-| - kubelet running  |
-+---------------------+
 
 ## Usage
 ```bash
